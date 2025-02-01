@@ -1,0 +1,51 @@
+table{
+    width: 60%;
+    border-collapse:collapse ;
+    margin: 20px;
+}
+
+table tr, table td{
+    border: 1px solid gray;
+    padding: 5px;
+    font-size: 15px;
+    text-align: center;
+    border: 1px solid gray;
+}
+
+
+.tableHeader {
+    font-size: 35px;
+    background-color: #7aa7c7;
+    letter-spacing: 0.03em;
+    color: black;
+    font-weight: 800;
+}
+
+
+
+div.loaderSection{
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: black;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    }

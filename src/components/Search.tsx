@@ -1,28 +1,30 @@
 import React from "react";
+import './Search.css'
+
+interface Props {
+    onSearch: (searchTerm: string) => void
+}
 
 type State = {
-    searchTerm: string;
-};
-
-class Search extends React.Component<{}, State> {
-    constructor(props: {}) {
+    inputValue: string;
+}
+class Search extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
-            searchTerm: ''
+            inputValue: localStorage.getItem('searchTerm') || ''
         }
     }
+
     toggleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-        console.log(event.target.value);
-        this.setState({ searchTerm: event.target.value });
+        this.setState({ inputValue: event.target.value });
     }
-    handleClick() {
-        console.log('Sending data', this.state.searchTerm)
-    }
-    render() {
-        return <>
-            <input type="text" onChange={(event) => this.toggleInputChange(event)} />
-            <button onClick={this.handleClick.bind(this)}>Search</button>
-        </>
+
+    render(): JSX.Element {
+        return <section className='searchSection'>
+            <input type="text" onChange={(event) => this.toggleInputChange(event)} value={this.state.inputValue} />
+            <button onClick={() =>  this.props.onSearch(this.state.inputValue)} className="searchSectionButton">Search</button>
+        </section>
     }
 }
 

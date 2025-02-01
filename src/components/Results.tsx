@@ -1,54 +1,62 @@
 import React from "react";
+import './Results.css'
 type State = {
-    FILM_DATA: {
-        results: null | Film[];
-    } | null
+    PEOPLE_DATA: {
+        results: null | People[];
+    }| null,
 }
-
-interface Film {
-    title: string;
-    director: string;
+type Props ={
+    searchTermValue: String,
 }
-class Results extends React.Component<{}, State> {
-    constructor(props: {}) {
+interface People {
+    name: string;
+    hair_color: string;
+    birth_year: string;
+    gender: string;
+}
+class Results extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
-            FILM_DATA: null,
+            PEOPLE_DATA: null,
         }
     }
 
     componentDidMount(): void {
-        fetch("https://swapi.dev/api/films/").
+        fetch(`https://swapi.dev/api/people/`).
             then(res => res.json()).
-            then(res => this.setState({ FILM_DATA: res })).
+            then(res => this.setState({ PEOPLE_DATA: res })).
             catch(err => console.log(err))
     }
 
-    componentWillUnmount(): void {
-        console.log('Error')
+    componentDidUpdate(): void {
+        fetch(`https://swapi.dev/api/people/?search=${this.props.searchTermValue || ''}`).
+            then(res => res.json()).
+            then(res => this.setState({ PEOPLE_DATA: res })).
+            catch(err => console.log(err))
     }
 
     render(): JSX.Element {
-        const { FILM_DATA } = this.state;
+        const { PEOPLE_DATA } = this.state;
         return <>
-            {!FILM_DATA ? (
-                <div>
-                    <td colSpan={2}>Loading...</td>
+            {!PEOPLE_DATA ? (
+                <div className="loaderSection">
+                    <span className="loader"></span>
                 </div>
             )
                 : (
                     <table>
-                        <thead>
+                        <thead className="tableHeader">
                             <tr>
-                                <th>Film Name</th>
-                                <th>Director</th>
+                                <td>Hero Name</td>
+                                <td>Description </td>
                             </tr>
                         </thead>
                         <tbody>
-                            {FILM_DATA.results?.map((film, index) => (
+                            {PEOPLE_DATA.results?.map((man, index) => (
                                 <tr key={index}>
-                                    <td>{film.title}</td>
-                                    <td>{film.director}</td>
+                                    <td>{man.name}</td>
+                                    <td>{man.name} has {man.hair_color} hair, was born in {man.birth_year}, and is {man.gender}.</td>
                                 </tr>))
                             }
                         </tbody>

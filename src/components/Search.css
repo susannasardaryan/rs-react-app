@@ -1,0 +1,73 @@
+.searchSection{
+    /* background: linear-gradient(to right, rgba(183, 183, 183, 0.7), #6A9AB0); */
+    border-radius: 0 0 4px 4px;
+    position: sticky;
+    top: 0;
+    padding: 7px;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.searchSection input{
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 8px .8em;
+    width: 20%;
+    outline: none;
+    margin-right: 2px;
+}
+
+input:active{
+    border-color: lightgrey;
+}
+
+
+.searchSectionButton {
+  background-color: #e1ecf4;
+  border-radius: 3px;
+  border: 1px solid #7aa7c7;
+  box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #39739d;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.15385;
+  margin: 0;
+  outline: none;
+  padding: 8px .8em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.searchSectionButton:hover,
+.searchSectionButton:focus {
+  background-color: #b3d3ea;
+  color: #2c5777;
+}
+
+input:hover,
+input:focus,
+input:active  {
+    border: 1px solid #2c5777;
+  color: #2c5777;
+}
+
+.searchSectionButton:focus {
+  box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+}
+
+.searchSectionButton:active {
+  background-color: #a0c7e4;
+  box-shadow: none;
+  color: #2c5777;
+}
