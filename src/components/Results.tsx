@@ -3,9 +3,10 @@ import './Results.css'
 type State = {
     PEOPLE_DATA: {
         results: null | People[];
-    }| null,
+    } | null,
+    hasError: boolean
 }
-type Props ={
+type Props = {
     searchTermValue: String,
 }
 interface People {
@@ -19,26 +20,37 @@ class Results extends React.Component<Props, State> {
         super(props);
         this.state = {
             PEOPLE_DATA: null,
+            hasError: false
         }
     }
 
     componentDidMount(): void {
-        fetch(`https://swapi.dev/api/people/`).
+        fetch(`https://swapi.dev/api/people/?page=1&search=${this.props.searchTermValue || ''}`).
             then(res => res.json()).
             then(res => this.setState({ PEOPLE_DATA: res })).
-            catch(err => console.log(err))
+            catch(err => { throw new Error(err) })
     }
 
-    componentDidUpdate(): void {
-        fetch(`https://swapi.dev/api/people/?search=${this.props.searchTermValue || ''}`).
-            then(res => res.json()).
-            then(res => this.setState({ PEOPLE_DATA: res })).
-            catch(err => console.log(err))
+    throwError() {
+        this.setState({ hasError: true })
+    }
+
+    componentDidUpdate(prevProps: Props): void {
+        if (prevProps.searchTermValue !== this.props.searchTermValue) {
+            this.setState({ PEOPLE_DATA: null });
+            fetch(`https://swapi.dev/api/people/?page=1&search=${this.props.searchTermValue}`)
+                .then(res => res.json())
+                .then(res => this.setState({ PEOPLE_DATA: res }))
+                .catch(err => { throw new Error(err) });
+        }
     }
 
     render(): JSX.Element {
         const { PEOPLE_DATA } = this.state;
-        return <>
+        if (this.state.hasError) {
+            throw new Error('I crashed!');
+        }
+        return <section className="resultsSection">
             {!PEOPLE_DATA ? (
                 <div className="loaderSection">
                     <span className="loader"></span>
@@ -61,8 +73,16 @@ class Results extends React.Component<Props, State> {
                             }
                         </tbody>
                     </table>
+
                 )}
-        </>
+                <div style={{
+                    textAlign: "right",
+                    marginRight: '15px'
+                }}>
+                    <button onClick={this.throwError.bind(this)} className="errorButton">Error button</button>
+                </div>
+
+        </section>
     }
 }
 

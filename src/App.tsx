@@ -3,6 +3,7 @@ import './App.css'
 import Search from './components/Search.tsx'
 import Results from './components/Results.tsx'
 import { Component } from 'react'
+import ErrorBoundary from './components/ErrorBoundary.tsx'
 
 type State = {
   searchTerm: String,
@@ -21,19 +22,14 @@ class App extends Component<{}, State> {
     this.setState({ searchTerm: value });
     localStorage.setItem('searchTerm', value);
   }
-  throwError() {
-    this.setState({ hasError: true })
-  }
-  render(): JSX.Element {
-    if (this.state.hasError) {
-      throw new Error('I crashed!');
-    }
 
+  render(): JSX.Element {
     return (
       <>
         <Search onSearch={this.handleSearch.bind(this)}></Search>
-        <Results searchTermValue={this.state.searchTerm}></Results>
-        <button onClick={this.throwError.bind(this)}>Error button</button>
+        <ErrorBoundary>
+          <Results searchTermValue={this.state.searchTerm}></Results>
+        </ErrorBoundary>
       </>
     )
   }

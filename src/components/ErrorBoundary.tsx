@@ -21,7 +21,12 @@ class ErrorBoundary extends Component<React.PropsWithChildren, State> {
   render() {
     if (this.state.errorInfo) {
       return (
-        <div>
+        <div style={{
+          color: '#D8000C',
+			    backgroundColor: '#FFBABA',
+          margin: '10px',
+          padding: '20px'
+        }}>
           <h1>Something went wrong.</h1>
           <p>{this.state.error?.message}</p>
           <pre>{this.state.errorInfo.componentStack}</pre>

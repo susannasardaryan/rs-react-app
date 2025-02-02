@@ -1,10 +1,14 @@
-table{
+.resultsSection {
     width: 60%;
-    border-collapse:collapse ;
     margin: 20px;
 }
 
-table tr, table td{
+table {
+    border-collapse: collapse;
+}
+
+table tr,
+table td {
     border: 1px solid gray;
     padding: 5px;
     font-size: 15px;
@@ -23,7 +27,7 @@ table tr, table td{
 
 
 
-div.loaderSection{
+div.loaderSection {
     display: flex;
     text-align: center;
     align-items: center;
@@ -34,18 +38,30 @@ div.loaderSection{
     width: 48px;
     height: 48px;
     border: 5px solid #FFF;
-    border-bottom-color: black;
+    border-bottom-color: #7aa7c7;
     border-radius: 50%;
     display: inline-block;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
-    }
+}
 
-    @keyframes rotation {
+@keyframes rotation {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
-    }
+}
+
+
+.errorButton {
+    text-align: right;
+    color: #8e0007;
+    background-color: #FFBABA;
+    margin: 20px 0;
+    padding: 8px;
+    border: 1px solid #8e0007;
+    border-radius: 5px
+}

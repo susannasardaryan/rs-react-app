@@ -1,12 +1,12 @@
 .searchSection{
-    /* background: linear-gradient(to right, rgba(183, 183, 183, 0.7), #6A9AB0); */
-    border-radius: 0 0 4px 4px;
+    background: linear-gradient(to right, rgba(235, 234, 234, 0.7), rgba(106, 154, 176, 0.5));
     position: sticky;
     top: 0;
     padding: 7px;
-    margin-left: 15px;
+    margin-left: 5px;
     display: flex;
     align-items: center;
+    border-bottom: 1px solid rgba(106, 154, 176, 0.5);
 }
 
 .searchSection input{
