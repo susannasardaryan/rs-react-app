@@ -1,3 +1,5 @@
+import './Pagination.css'
+
 interface Props {
     nextPage: () => void,
     prevPage: () => void,
@@ -6,9 +8,9 @@ interface Props {
 
 const Pagination = (props: Props) => {
     return <>
-        <button onClick={() => props.prevPage()}>Prev</button>
+        <button onClick={() => props.prevPage()} className="paginationButton">Prev</button>
         ...pages
-        <button onClick={() => props.nextPage()}>Next</button>
+        <button onClick={() => props.nextPage()} className="paginationButton">Next</button>
     </>
 }
 

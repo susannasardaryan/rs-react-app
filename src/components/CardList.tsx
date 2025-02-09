@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import './CardList.css'
 import Card from "./Card";
+import Loader from "./Loader";
 type State = {
         results: null | People[];
 } | null;
@@ -36,9 +37,7 @@ const Results = (props: Props) => {
 
     return <section>
         {!PEOPLE_DATA ? (
-            <div className="loaderSection">
-                <span className="loader"></span>
-            </div>
+            <Loader />
         )
             : (
                 <section className="cardList">
