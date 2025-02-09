@@ -1,15 +1,16 @@
 import './App.css'
 
 import Search from './components/Search.tsx'
-import Results from './components/CardList.tsx'
+import CardList from './components/CardList.tsx'
 import {useState } from 'react'
 import ErrorBoundary from './components/ErrorBoundary.tsx'
-
+import Pagination from './components/Pagination.tsx'
 
 const App = () =>{
 
 const [searchTerm, setSearchTerm] = useState<string>(localStorage.getItem('searchTerm') || '')
-
+const [pageNumber, setPageNumber] = useState<number>(1);
+const [dataLoaded, setDataLoaded] = useState(false);
 
   function handleSearch(value: string) {
     setSearchTerm(value);
@@ -20,9 +21,12 @@ const [searchTerm, setSearchTerm] = useState<string>(localStorage.getItem('searc
       <>
         <Search onSearch={handleSearch}></Search>
         <ErrorBoundary>
-          <Results searchTermValue={searchTerm}></Results>
+          <CardList searchTermValue={searchTerm} pageNumber={pageNumber} onDataLoaded={setDataLoaded} ></CardList>
         </ErrorBoundary>
-      </>
+        {dataLoaded &&
+        <Pagination nextPage={() => setPageNumber(pageNumber+1 )} prevPage={()=>setPageNumber(pageNumber-1 )}></Pagination>
+
+      }  </>
     )
 
 }

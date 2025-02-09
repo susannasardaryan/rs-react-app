@@ -7,21 +7,27 @@ type State = {
 
 type Props = {
     searchTermValue: String,
+    pageNumber: number,
+    onDataLoaded: (value: boolean) => void
 }
 interface People {
     name: string;
     birth_year: string;
+    url : string;
 }
 const Results = (props: Props) => {
     const [PEOPLE_DATA, setPeopleData] = useState<State>(null);
     const [hasError, setHasError] = useState<boolean>(false);
 
     useEffect(():void => {
-        fetch(`https://swapi.dev/api/people/?page=1&search=${props.searchTermValue || ''}`).
+        fetch(`https://swapi.dev/api/people/?page=${props.pageNumber}&search=${props.searchTermValue || ''}`).
             then(res => res.json()).
-            then(res => setPeopleData(res)).
+            then(res => {
+                setPeopleData(res)
+                props.onDataLoaded(true);
+            }).
             catch(err => { throw new Error(err) })
-    }, [props.searchTermValue])
+    }, [props.searchTermValue, props.pageNumber])
 
 
     if (hasError) {
@@ -36,10 +42,12 @@ const Results = (props: Props) => {
         )
             : (
                 <section className="cardList">
-                        {PEOPLE_DATA.results?.map((man, index) => (
-                            <Card key={index} person ={man} image={`https://starwars-visualguide.com/assets/img/characters/${index+1}.jpg`}/>
-                        ))
+                        {PEOPLE_DATA.results?.map((man, index) => {
+                            let splitedUrl:string[] = man.url.split('/');
+                            let id:string = splitedUrl[5];
+                            return <Card key={index} person ={man} image={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}/>
                         }
+                    )}
                 </section>
 
             )}
