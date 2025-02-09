@@ -1,12 +1,14 @@
 import './App.css'
 
 import Search from './components/Search.tsx'
-import CardList from './components/CardList.tsx'
+import MainPage from './components/MainPage.tsx'
+import Details from './components/Details.tsx'
 import { useState } from 'react'
 import ErrorBoundary from './components/ErrorBoundary.tsx'
 import Pagination from './components/Pagination.tsx'
 import NotFound from './components/NotFound.tsx'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 
 const App = () => {
 
@@ -28,16 +30,16 @@ const App = () => {
             <>
               <Search onSearch={handleSearch} />
               <ErrorBoundary>
-                <CardList searchTermValue={searchTerm}  onDataLoaded={setDataLoaded} />
+                <MainPage searchTermValue={searchTerm} onDataLoaded={setDataLoaded} />
               </ErrorBoundary>
               {dataLoaded && (
-                <Pagination/>
+                <Pagination />
               )}
             </>
-
-          }
-        />
-         <Route path="*" element={<NotFound />} />
+          }>
+          <Route path='/details/:id' element={<Details />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

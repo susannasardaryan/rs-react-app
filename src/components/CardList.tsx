@@ -4,7 +4,7 @@ import './CardList.css'
 import Card from "./Card";
 import Loader from "./Loader";
 type State = {
-        results: null | People[];
+    results: null | People[];
 } | null;
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 interface People {
     name: string;
     birth_year: string;
-    url : string;
+    url: string;
 }
 const Results = (props: Props) => {
     const [PEOPLE_DATA, setPeopleData] = useState<State>(null);
@@ -23,7 +23,7 @@ const Results = (props: Props) => {
     const pageNumber = parseInt(searchParams.get("page") || "1");
     let navigate = useNavigate();
 
-    useEffect(():void => {
+    useEffect((): void => {
         fetch(`https://swapi.dev/api/people/?page=${pageNumber || 1}&search=${props.searchTermValue || ''}`).
             then(res => res.json()).
             then(res => {
@@ -31,7 +31,7 @@ const Results = (props: Props) => {
                     setPeopleData(res);
                     props.onDataLoaded(true);
                 } else {
-                    navigate('/404'); 
+                    navigate('/404');
                 }
             })
             .catch(err => {
@@ -40,6 +40,9 @@ const Results = (props: Props) => {
             })
     }, [props.searchTermValue, pageNumber])
 
+    const handleItemClick = (id: string) => {
+        navigate(`/details/${id}/?page=${pageNumber}`);
+    };
 
     if (hasError) {
         throw new Error('I crashed!');
@@ -51,11 +54,14 @@ const Results = (props: Props) => {
         )
             : (
                 <section className="cardList">
-                        {PEOPLE_DATA.results?.map((man, index) => {
-                            let splitedUrl:string[] = man.url.split('/');
-                            let id:string = splitedUrl[5];
-                            return <Card key={index} person ={man} image={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}/>
-                        }
+                    {PEOPLE_DATA.results?.map((man, index) => {
+                        let splitedUrl: string[] = man.url.split('/');
+                        let id: string = splitedUrl[5];
+                        const imgUrl: string = `https://starwars-visualguide.com/assets/img/characters/${id}.jpg`;
+                        return  <div key={index} onClick={() => handleItemClick(id)}>
+                        <Card person={man} image={imgUrl} />
+                    </div>
+                    }
                     )}
                 </section>
 
