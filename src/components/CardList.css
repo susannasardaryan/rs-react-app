@@ -1,31 +1,10 @@
-.resultsSection {
-    width: 60%;
-    margin: 20px;
+.cardList{
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
-
-table {
-    border-collapse: collapse;
-}
-
-table tr,
-table td {
-    border: 1px solid gray;
-    padding: 5px;
-    font-size: 15px;
-    text-align: center;
-    border: 1px solid gray;
-}
-
-
-.tableHeader {
-    font-size: 35px;
-    background-color: #7aa7c7;
-    letter-spacing: 0.03em;
-    color: black;
-    font-weight: 800;
-}
-
-
 
 div.loaderSection {
     display: flex;
