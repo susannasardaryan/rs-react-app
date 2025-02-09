@@ -29,7 +29,7 @@ const Results = (props: Props) => {
                 setPeopleData(res)
                 props.onDataLoaded(true);
             }).
-            catch(err => { throw new Error(err) })
+            catch(err => console.log(err))
     }, [props.searchTermValue, pageNumber])
 
 

@@ -6,6 +6,7 @@ import { useState } from 'react'
 import ErrorBoundary from './components/ErrorBoundary.tsx'
 import Pagination from './components/Pagination.tsx'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 const App = () => {
 
   const [searchTerm, setSearchTerm] = useState<string>(localStorage.getItem('searchTerm') || '')
