@@ -16,7 +16,7 @@ interface People {
     birth_year: string;
     url: string;
 }
-const Results = (props: Props) => {
+const CardList = (props: Props) => {
     const [PEOPLE_DATA, setPeopleData] = useState<State>(null);
     const [hasError, setHasError] = useState<boolean>(false);
     const [searchParams] = useSearchParams();
@@ -58,9 +58,11 @@ const Results = (props: Props) => {
                         let splitedUrl: string[] = man.url.split('/');
                         let id: string = splitedUrl[5];
                         const imgUrl: string = `https://starwars-visualguide.com/assets/img/characters/${id}.jpg`;
-                        return  <div key={index} onClick={() => handleItemClick(id)}>
-                        <Card person={man} image={imgUrl} />
-                    </div>
+                        return (
+                            <div key={index}>
+                              <Card person={man} image={imgUrl} onClick={() => handleItemClick(id)} />
+                            </div>
+                          );
                     }
                     )}
                 </section>
@@ -76,4 +78,4 @@ const Results = (props: Props) => {
     </section>
 }
 
-export default Results;
+export default CardList;
