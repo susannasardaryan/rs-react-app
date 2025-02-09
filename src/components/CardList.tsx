@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import './CardList.css'
 import Card from "./Card";
 import Loader from "./Loader";
@@ -8,7 +9,6 @@ type State = {
 
 type Props = {
     searchTermValue: String,
-    pageNumber: number,
     onDataLoaded: (value: boolean) => void
 }
 interface People {
@@ -19,16 +19,18 @@ interface People {
 const Results = (props: Props) => {
     const [PEOPLE_DATA, setPeopleData] = useState<State>(null);
     const [hasError, setHasError] = useState<boolean>(false);
+    const [searchParams] = useSearchParams();
+    const pageNumber = parseInt(searchParams.get("page") || "1");
 
     useEffect(():void => {
-        fetch(`https://swapi.dev/api/people/?page=${props.pageNumber}&search=${props.searchTermValue || ''}`).
+        fetch(`https://swapi.dev/api/people/?page=${pageNumber || 1}&search=${props.searchTermValue || ''}`).
             then(res => res.json()).
             then(res => {
                 setPeopleData(res)
                 props.onDataLoaded(true);
             }).
             catch(err => { throw new Error(err) })
-    }, [props.searchTermValue, props.pageNumber])
+    }, [props.searchTermValue, pageNumber])
 
 
     if (hasError) {

@@ -1,17 +1,39 @@
-import './Pagination.css'
+import './Pagination.css';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-interface Props {
-    nextPage: () => void,
-    prevPage: () => void,
-}
+const Pagination = () => {
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const pageNumber = parseInt(searchParams.get("page") || "1");
 
+    function handleNextPageClick() {
+        navigate(`?page=${pageNumber + 1}`);
+    }
 
-const Pagination = (props: Props) => {
-    return <>
-        <button onClick={() => props.prevPage()} className="paginationButton">Prev</button>
-        ...pages
-        <button onClick={() => props.nextPage()} className="paginationButton">Next</button>
-    </>
+    function handlePrevPageClick() {
+        if (pageNumber > 1) {
+            navigate(`?page=${pageNumber - 1}`);
+        }
+    }
+
+    return (
+        <>
+            <button
+                onClick={handlePrevPageClick}
+                className="paginationButton"
+                disabled={pageNumber <= 1}
+            >
+                Prev
+            </button>
+            <span style={{color: 'white'}}> Page {pageNumber} </span>
+            <button
+                onClick={handleNextPageClick}
+                className="paginationButton"
+            >
+                Next
+            </button>
+        </>
+    );
 }
 
 export default Pagination;
