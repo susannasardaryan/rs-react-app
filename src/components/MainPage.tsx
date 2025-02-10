@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import CardList from './CardList.tsx';
-import './MainPage.css'; // Add styles for the split view
+import './MainPage.css'; 
 type Props = {
     searchTermValue: String,
     onDataLoaded: (value: boolean) => void
