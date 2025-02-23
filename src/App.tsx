@@ -8,7 +8,8 @@ import ErrorBoundary from './components/ErrorBoundary.tsx'
 import Pagination from './components/Pagination/Pagination.tsx'
 import NotFound from './components/NotFound.tsx'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
+import { Provider } from 'react-redux'
+import { store } from './store/store.ts'
 
 const App = () => {
 
@@ -33,7 +34,9 @@ const App = () => {
                 <MainPage searchTermValue={searchTerm} onDataLoaded={setDataLoaded} />
               </ErrorBoundary>
               {dataLoaded && (
-                <Pagination />
+                <Provider store={store}>
+                  <Pagination />
+                </Provider>
               )}
             </>
           }>

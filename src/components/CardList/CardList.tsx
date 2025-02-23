@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useGetSearchedDataQuery } from "../../store/ApiSlice";
 import "./CardList.css";
 import Card from "../Card/Card";
 import Loader from "../Loader/Loader";
+import SelectedItems from "../SelectedItems";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 type Props = {
     searchTermValue: string;
@@ -12,12 +15,10 @@ type Props = {
 
 
 const CardList = (props: Props) => {
-    const [hasError, setHasError] = useState<boolean>(false);
-    const [searchParams] = useSearchParams();
-    const pageNumber: number = parseInt(searchParams.get("page") || "1");
+    const pageNumber = useSelector((state: RootState) => state.app.pageNumber);
     const navigate = useNavigate();
 
-    const { data, error, isLoading } = useGetSearchedDataQuery({
+    const { data, error, isFetching  } = useGetSearchedDataQuery({
         searchTermValue: props.searchTermValue,
         pageNumber,
     });
@@ -29,25 +30,21 @@ const CardList = (props: Props) => {
             return;
         }
 
-        if (!isLoading && (!data || !data.results)) {
+        if (!isFetching  && (!data || !data.results)) {
             navigate("/404");
-            return; 
+            return;
         }
 
         if (data?.results) {
             props.onDataLoaded(true);
         }
-    }, [data, error, isLoading, navigate, props]);
+    }, [data, error, isFetching , navigate, props, pageNumber]);
 
     const handleItemClick = (id: string) => {
         navigate(`/details/${id}/?page=${pageNumber}`);
     };
 
-    if (hasError) {
-        throw new Error("I crashed!");
-    }
-
-    if (isLoading) {
+    if (isFetching ) {
         return <Loader />;
     }
 
@@ -63,6 +60,7 @@ const CardList = (props: Props) => {
                         return (
                             <div key={index}>
                                 <Card
+                                    id = {id}
                                     person={man}
                                     image={imgUrl}
                                     onClick={() => handleItemClick(id)}
@@ -74,9 +72,7 @@ const CardList = (props: Props) => {
             ) : null}
 
             <div style={{ textAlign: "right", marginRight: "15px" }}>
-                <button onClick={() => setHasError(true)} className="errorButton">
-                    Error button
-                </button>
+               <SelectedItems/>
             </div>
         </section>
     );

@@ -2,7 +2,9 @@ import { Outlet, useLocation } from "react-router-dom";
 import CardList from '../CardList/CardList.tsx';
 import './MainPage.css';
 import { ApiProvider } from "@reduxjs/toolkit/query/react";
+import { Provider } from "react-redux";
 import { peopleDataApi } from "../../store/ApiSlice.tsx";
+import { store } from "../../store/store.ts";
 
 type Props = {
     searchTermValue: string,
@@ -16,8 +18,11 @@ const MainPage = ({ searchTermValue, onDataLoaded }: Props) => {
         <div className="split-view">
             <div className="left-section">
                 <ApiProvider api={peopleDataApi}>
-                    <CardList searchTermValue={searchTermValue} onDataLoaded={onDataLoaded} />
+                    <Provider store={store}>
+                        <CardList searchTermValue={searchTermValue} onDataLoaded={onDataLoaded} />
+                    </Provider>
                 </ApiProvider>
+
 
             </div>
 

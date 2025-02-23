@@ -1,21 +1,16 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { peopleDataApi } from './ApiSlice';
+// store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import { peopleDataApi } from "./ApiSlice";
+import appReducer from "./appSlice";
 
-const rootReducer = combineReducers({
-  [peopleDataApi.reducerPath]: peopleDataApi.reducer,
+export const store = configureStore({
+  reducer: {
+    [peopleDataApi.reducerPath]: peopleDataApi.reducer,
+    app: appReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(peopleDataApi.middleware),
 });
 
-type PreloadedState = Partial<ReturnType<typeof rootReducer>>;
-
-export const setupStore = (preloadedState?: PreloadedState) => {
-  return configureStore({
-    reducer: rootReducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(peopleDataApi.middleware),
-    preloadedState,
-  });
-};
-
-export type RootState = ReturnType<typeof rootReducer>;
-export type AppStore = ReturnType<typeof setupStore>;
-export type AppDispatch = AppStore['dispatch'];
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
