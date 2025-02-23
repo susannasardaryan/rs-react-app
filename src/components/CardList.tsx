@@ -57,7 +57,7 @@ const CardList = (props: Props) => {
                     {PEOPLE_DATA.results?.map((man, index) => {
                         let splitedUrl: string[] = man.url.split('/');
                         let id: string = splitedUrl[5];
-                        const imgUrl: string = `https://starwars-visualguide.com/assets/img/characters/${id}.jpg`;
+                        const imgUrl: string = `https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/${id}.jpg`;
                         return (
                             <div key={index}>
                               <Card person={man} image={imgUrl} onClick={() => handleItemClick(id)} />

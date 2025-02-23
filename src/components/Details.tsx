@@ -21,7 +21,7 @@ const Details = () => {
                 .catch((err) => console.log(err));
         }
     }, [id]);
-    const imgUrl: string = `https://starwars-visualguide.com/assets/img/characters/${id}.jpg`;
+    const imgUrl: string = `https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/${id}.jpg`;
     return (
         <>
             <img src={imgUrl} alt="Person" />
