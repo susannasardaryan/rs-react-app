@@ -1,0 +1,25 @@
+.split-view {
+    display: flex;
+    height: 100%;
+}
+
+.left-section {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.right-section {
+    flex: 1;
+    padding: 16px;
+    border-left: 1px solid #ccc;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.right-section>img{
+    width: 20rem;
+}
