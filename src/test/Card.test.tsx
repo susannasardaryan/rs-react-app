@@ -1,7 +1,7 @@
 import { describe, it, expect} from 'vitest';
 import { vi } from 'vitest'; // Import vi directly
 import { render, screen, fireEvent } from '@testing-library/react';
-import Card from '../components/Card';
+import Card from '../components/Card/Card';
 // Mock the onClick handler
 const mockOnClick = vi.fn();
 

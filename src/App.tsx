@@ -1,11 +1,11 @@
 import './App.css'
 
-import Search from './components/Search.tsx'
-import MainPage from './components/MainPage.tsx'
+import Search from './components/Search/Search.tsx'
+import MainPage from './components/MainPage/MainPage.tsx'
 import Details from './components/Details.tsx'
 import { useState } from 'react'
 import ErrorBoundary from './components/ErrorBoundary.tsx'
-import Pagination from './components/Pagination.tsx'
+import Pagination from './components/Pagination/Pagination.tsx'
 import NotFound from './components/NotFound.tsx'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 

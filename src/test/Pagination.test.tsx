@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
-import Pagination from "../components/Pagination";
+import Pagination from "../components/Pagination/Pagination";
 
 test('Make sure the component updates URL query parameter when page changes.', () => {
     render(

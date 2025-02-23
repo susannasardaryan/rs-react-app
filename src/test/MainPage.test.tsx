@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import MainPage from '../components/MainPage';
+import MainPage from '../components/MainPage/MainPage';
 
 
 vi.mock('../components/CardList', () => ({

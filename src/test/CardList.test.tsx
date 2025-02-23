@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import CardList from '../components/CardList';
+import CardList from '../components/CardList/CardList';
 
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import Search from '../components/Search';
+import Search from '../components/Search/Search';
 
 describe('Search Component', () => {
   const mockOnSearch = vi.fn();

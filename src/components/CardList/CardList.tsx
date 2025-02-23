@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import './CardList.css'
-import Card from "./Card";
-import Loader from "./Loader";
+import Card from "../Card/Card";
+import Loader from "../Loader/Loader";
 type State = {
     results: null | People[];
 } | null;

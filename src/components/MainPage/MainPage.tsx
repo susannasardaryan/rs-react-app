@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
-import CardList from './CardList.tsx';
-import './MainPage.css'; 
+import CardList from '../CardList/CardList.tsx';
+import './MainPage.css';
 type Props = {
     searchTermValue: String,
     onDataLoaded: (value: boolean) => void
