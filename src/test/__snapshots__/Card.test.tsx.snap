@@ -1,0 +1,27 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Card Component > matches snapshot 1`] = `
+<div>
+  <div
+    class="card"
+    role="button"
+  >
+    <p>
+      Luke Skywalker
+    </p>
+    <input
+      id="1"
+      name="Luke Skywalker"
+      type="checkbox"
+    />
+    <img
+      alt="Luke Skywalker"
+      src="https://example.com/image.jpg"
+    />
+    <p>
+      Birth Year: 
+      19BBY
+    </p>
+  </div>
+</div>
+`;

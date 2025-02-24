@@ -1,0 +1,18 @@
+.cardList{
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+.errorButton {
+    text-align: right;
+    color: #8e0007;
+    background-color: #FFBABA;
+    margin: 20px 0;
+    padding: 8px;
+    border: 1px solid #8e0007;
+    border-radius: 5px
+}
