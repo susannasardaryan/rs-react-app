@@ -35,8 +35,11 @@ const appSlice = createSlice({
       removeItem: (state, action) => {
         state.selectedItems = state.selectedItems.filter(item => item !== action.payload);
       },
+      unselectAllItems: (state)=>{
+        state.selectedItems = [];
+      }
   },
 });
 
-export const { setLoading,setPageNumber, addItem, removeItem } = appSlice.actions;
+export const { setLoading,setPageNumber, addItem, removeItem, unselectAllItems } = appSlice.actions;
 export default appSlice.reducer;

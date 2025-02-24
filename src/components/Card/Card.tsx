@@ -1,4 +1,3 @@
-// Card.tsx
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { addItem, removeItem } from "../../store/appSlice";
@@ -22,7 +21,7 @@ const Card = ({ onClick,id, person, image }: Props) => {
   const selectedItems = useSelector((state: RootState) => state.app.selectedItems);
 
   const [checked, setChecked] = useState<boolean>(selectedItems.includes(id))
-  const handleClick = () => {
+  const handleChange = () => {
     if(!checked){
       console.log(selectedItems);
       dispatch(addItem(id));
@@ -33,9 +32,13 @@ const Card = ({ onClick,id, person, image }: Props) => {
   };
 
   return (
-    <div className="card"  role="button" onClick={onClick}>
+    <div className="card"  role="button" onClick={(e) => {
+    if (!(e.target instanceof HTMLInputElement && e.target.type === "checkbox")) {
+      onClick?.();
+    }
+  }}>
       <p>{person.name}</p>
-      <input type="checkbox" name={person.name} id={id} checked={selectedItems.includes(id)} onChange={handleClick}/>
+      <input type="checkbox" name={person.name} id={id} checked={selectedItems.includes(id)} onChange={handleChange}/>
       <img src={image} alt={person.name} />
       <p>Birth Year: {person.birth_year}</p>
     </div>
