@@ -1,76 +1,128 @@
-import { describe, it, expect} from 'vitest';
-import { vi } from 'vitest'; // Import vi directly
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen} from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { MemoryRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import { configureStore } from '@reduxjs/toolkit';
 import Card from '../components/Card/Card';
-// Mock the onClick handler
-const mockOnClick = vi.fn();
+import appReducer from '../store/appSlice';
+import { RootState } from '../store/store';
+import userEvent from '@testing-library/user-event';
+import { peopleDataApi } from '../store/ApiSlice';
 
-// Mock data for the card
-const mockPerson = {
-  name: 'Luke Skywalker',
-  birth_year: '19BBY',
-};
-
-const mockImage = 'https://starwars-visualguide.com/assets/img/characters/1.jpg';
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual('react-router-dom');
+    return {
+        ...actual,
+        useNavigate: vi.fn(() => vi.fn()),
+    };
+});
 
 describe('Card Component', () => {
-  it('renders the card with correct data', () => {
-    render(<Card person={mockPerson} image={mockImage} />);
+    const navigate = vi.fn();
+    const mockPerson = {
+        name: 'Luke Skywalker',
+        birth_year: '19BBY',
+    };
+    const mockImage = 'https://example.com/image.jpg';
 
-    expect(screen.getByText('Luke Skywalker')).toBeInTheDocument();
+    beforeEach(() => {
+        navigate.mockClear();
+        vi.mocked(useNavigate).mockReturnValue(navigate);
+        localStorage.clear();
+    });
 
-    expect(screen.getByText('Birth Year: 19BBY')).toBeInTheDocument();
+    afterEach(() => {
+        vi.clearAllMocks();
+    });
 
-    // Check if the image is rendered with the correct src and alt text
-    const imageElement = screen.getByAltText('Luke Skywalker');
-    expect(imageElement).toHaveAttribute('src', mockImage);
-  });
+    const createMockStore = (initialState: Partial<RootState> = {
+        app: { pageNumber: 1, isLoading: false, selectedItems: [] },
+    }) => {
+        return configureStore({
+          reducer: {
+            [peopleDataApi.reducerPath]: peopleDataApi.reducer,
+            app: appReducer,
+        },
+            preloadedState: initialState as RootState,
+        });
+    };
 
-  it('calls onClick when the card is clicked', () => {
-    render(<Card person={mockPerson} image={mockImage} onClick={mockOnClick} />);
+    const renderComponent = (
+        store: ReturnType<typeof configureStore>,
+        id: string = '1',
+        onClick: () => void = vi.fn()
+    ) => {
+        return render(
+            <MemoryRouter initialEntries={['/']}>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <Provider store={store}>
+                                <Card id={id} person={mockPerson} image={mockImage} onClick={onClick} />
+                            </Provider>
+                        }
+                    />
+                    <Route path="/details/:id" element={<div>Details Page</div>} />
+                </Routes>
+            </MemoryRouter>
+        );
+    };
 
-    const cardElement = screen.getByRole('button');
-    fireEvent.click(cardElement);
+    it('renders the card with correct data', () => {
+        const store = createMockStore();
+        renderComponent(store);
 
-    expect(mockOnClick).toHaveBeenCalledTimes(1);
-  });
+        expect(screen.getByText(mockPerson.name)).toBeInTheDocument();
+        expect(screen.getByText(`Birth Year: ${mockPerson.birth_year}`)).toBeInTheDocument();
+        expect(screen.getByRole('img')).toHaveAttribute('src', mockImage);
+    });
 
+    it('calls onClick when the card is clicked', async () => {
+        const mockOnClick = vi.fn();
+        const store = createMockStore();
+        renderComponent(store, '1', mockOnClick);
 
-//   it('Validate that clicking on a card opens a detailed card component.', async () => {
-//     // Mock the fetch API for the Details component
-//     vi.fn(() =>
-//       Promise.resolve({
-//         json: () =>
-//           Promise.resolve({
-//             name: 'Luke Skywalker',
-//             height: '172',
-//             mass: '77',
-//             birth_year: '19BBY',
-//           }),
-//       })
-//     );
+        const cardElement = screen.getByRole('button');
+        await userEvent.click(cardElement);
 
-//     render(
-//       <MemoryRouter initialEntries={['/']}>
-//         <Routes>
-//           <Route path="/" element={<Card person={mockPerson} image={mockImage} onClick={mockOnClick} />} />
-//           <Route path="/details/:id" element={<Details />} />
-//         </Routes>
-//       </MemoryRouter>
-//     );
+        expect(mockOnClick).toHaveBeenCalledTimes(1);
+    });
 
-//     // Simulate clicking on the card
-//     const cardElement = screen.getByRole('button');
-//     fireEvent.click(cardElement);
+    it('toggles checkbox and updates Redux store', async () => {
+        const store = createMockStore();
+        renderComponent(store);
 
-//     // Wait for the Details component to render
-//     await screen.findByText('Height: 172');
-//     await screen.findByText('Mass: 77');
+        const checkbox = screen.getByRole('checkbox');
 
-//     // Verify that the Details component is rendered with the correct data
-//     expect(screen.getByText('Name: Luke Skywalker')).toBeInTheDocument();
-//     expect(screen.getByText('Height: 172')).toBeInTheDocument();
-//     expect(screen.getByText('Mass: 77')).toBeInTheDocument();
-//     expect(screen.getByText('Birth Year: 19BBY')).toBeInTheDocument();
-//   });
+        await userEvent.click(checkbox);
+        expect(store.getState().app.selectedItems).toContain('1');
+
+        await userEvent.click(checkbox);
+        expect(store.getState().app.selectedItems).not.toContain('1');
+    });
+
+    it('initializes checkbox state based on Redux store', () => {
+        const store = createMockStore({ app: { pageNumber: 1, isLoading: false, selectedItems: ['1'] } });
+        renderComponent(store);
+
+        expect(screen.getByRole('checkbox')).toBeChecked();
+    });
+
+    it('does not call onClick when checkbox is clicked', async () => {
+        const mockOnClick = vi.fn();
+        const store = createMockStore();
+        renderComponent(store, '1', mockOnClick);
+
+        const checkbox = screen.getByRole('checkbox');
+        await userEvent.click(checkbox);
+
+        expect(mockOnClick).not.toHaveBeenCalled();
+    });
+
+    it('matches snapshot', () => {
+        const store = createMockStore();
+        const { container } = renderComponent(store);
+        expect(container).toMatchSnapshot();
+    });
 });

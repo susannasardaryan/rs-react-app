@@ -18,7 +18,7 @@ const CardList = (props: Props) => {
     const pageNumber = useSelector((state: RootState) => state.app.pageNumber);
     const navigate = useNavigate();
 
-    const { data, error, isFetching  } = useGetSearchedDataQuery({
+    const { data, error, isFetching, isSuccess  } = useGetSearchedDataQuery({
         searchTermValue: props.searchTermValue,
         pageNumber,
     });
@@ -30,12 +30,12 @@ const CardList = (props: Props) => {
             return;
         }
 
-        if (!isFetching  && (!data || !data.results)) {
+        if (!data || data.count === 0) {
             navigate("/404");
             return;
         }
 
-        if (data?.results) {
+        if (isSuccess && data?.results) {
             props.onDataLoaded(true);
         }
     }, [data, error, isFetching , navigate, props, pageNumber]);
@@ -56,7 +56,6 @@ const CardList = (props: Props) => {
                         const splitedUrl = man.url.split("/");
                         const id = splitedUrl[5];
                         const imgUrl = `https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/${id}.jpg`;
-
                         return (
                             <div key={index}>
                                 <Card

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/37</span>
+                <span class='fraction'>0/41</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/37</span>
+                <span class='fraction'>0/41</span>
             </div>
         
             
@@ -112,7 +112,10 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -122,19 +125,22 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -163,15 +169,16 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import './App.css'<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >import Search from './components/Search.tsx'</span>
-<span class="cstat-no" title="statement not covered" >import MainPage from './components/MainPage.tsx'</span>
+<span class="cstat-no" title="statement not covered" >import Search from './components/Search/Search.tsx'</span>
+<span class="cstat-no" title="statement not covered" >import MainPage from './components/MainPage/MainPage.tsx'</span>
 <span class="cstat-no" title="statement not covered" >import Details from './components/Details.tsx'</span>
 <span class="cstat-no" title="statement not covered" >import { useState } from 'react'</span>
 <span class="cstat-no" title="statement not covered" >import ErrorBoundary from './components/ErrorBoundary.tsx'</span>
-<span class="cstat-no" title="statement not covered" >import Pagination from './components/Pagination.tsx'</span>
+<span class="cstat-no" title="statement not covered" >import Pagination from './components/Pagination/Pagination.tsx'</span>
 <span class="cstat-no" title="statement not covered" >import NotFound from './components/NotFound.tsx'</span>
 <span class="cstat-no" title="statement not covered" >import { BrowserRouter as Router, Route, Routes } from "react-router-dom";</span>
-&nbsp;
+<span class="cstat-no" title="statement not covered" >import { Provider } from 'react-redux'</span>
+<span class="cstat-no" title="statement not covered" >import { store } from './store/store.ts'</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >const App = () =&gt; {</span>
 &nbsp;
@@ -196,7 +203,9 @@
 <span class="cstat-no" title="statement not covered" >                &lt;MainPage searchTermValue={searchTerm} onDataLoaded={setDataLoaded} /&gt;</span>
 <span class="cstat-no" title="statement not covered" >              &lt;/ErrorBoundary&gt;</span>
 <span class="cstat-no" title="statement not covered" >              {dataLoaded &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >                &lt;Pagination /&gt;</span>
+<span class="cstat-no" title="statement not covered" >                &lt;Provider store={store}&gt;</span>
+<span class="cstat-no" title="statement not covered" >                  &lt;Pagination /&gt;</span>
+<span class="cstat-no" title="statement not covered" >                &lt;/Provider&gt;</span>
               )}
 <span class="cstat-no" title="statement not covered" >            &lt;/&gt;</span>
           }&gt;
@@ -217,7 +226,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-02-10T00:08:51.532Z
+                at 2025-02-24T23:13:29.805Z
             </div>
         <script src="../prettify.js"></script>
         <script>

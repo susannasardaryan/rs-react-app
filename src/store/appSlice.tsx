@@ -1,20 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Person {
-    name: string;
-    birth_year: string;
-  }
 
 interface AppState {
   isLoading: boolean;
-  currentPageItems: Person[];
   selectedItems: string[];
   pageNumber: number;
 }
 
 const initialState: AppState = {
   isLoading: false,
-  currentPageItems: [],
   selectedItems: [],
   pageNumber: 1,
 };

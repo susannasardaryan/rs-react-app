@@ -22,8 +22,6 @@ const MainPage = ({ searchTermValue, onDataLoaded }: Props) => {
                         <CardList searchTermValue={searchTermValue} onDataLoaded={onDataLoaded} />
                     </Provider>
                 </ApiProvider>
-
-
             </div>
 
 

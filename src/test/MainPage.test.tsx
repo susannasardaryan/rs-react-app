@@ -1,59 +1,56 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import MainPage from '../components/MainPage/MainPage';
 
-
-vi.mock('../components/CardList', () => ({
-  default: () => <div>CardList</div>,
+vi.mock('../components/CardList/CardList.tsx', () => ({
+  default: ({ searchTermValue, onDataLoaded }: {
+    searchTermValue: string,
+    onDataLoaded: (value: boolean) => void
+  }) => (
+    <div>
+      CardList - {searchTermValue}
+      <button onClick={() => onDataLoaded(true)}>Load Data</button>
+    </div>
+  ),
 }));
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useLocation: () => ({
-      pathname: '/details/1',
-    }),
-  };
-});
-
 describe('MainPage', () => {
-  it('renders CardList and Outlet when on details page', () => {
-    render(
-      <MemoryRouter initialEntries={['/details/1']}>
-        <Routes>
-          <Route path="/" element={<MainPage searchTermValue="" onDataLoaded={vi.fn()} />}>
-            <Route path="details/:id" element={<div>Details</div>} />
-          </Route>
-        </Routes>
-      </MemoryRouter>
-    );
+  const mockOnDataLoaded = vi.fn();
 
-    expect(screen.getByText('CardList')).toBeInTheDocument();
-    expect(screen.getByText('Details')).toBeInTheDocument();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
+  const renderMainPage = (initialPath = '/') => {
+    return render(
+        <MemoryRouter initialEntries={[initialPath]}>
+          <Routes>
+            <Route path="/" element={<MainPage searchTermValue="test" onDataLoaded={mockOnDataLoaded} />}>
+              <Route path="details/:id" element={<div>Details Section</div>} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+    );
+  };
 
-//     vi.mock('react-router-dom', async () => {
-//       const actual = await vi.importActual('react-router-dom');
-//       return {
-//         ...actual,
-//         useLocation: () => ({
-//           pathname: '/',
-//         }),
-//       };
-//     });
+  it('should render CardList and not details section on home page', () => {
+    renderMainPage();
+    expect(screen.getByText(/CardList - test/)).toBeInTheDocument();
+    expect(screen.queryByText('Details Section')).not.toBeInTheDocument();
+  });
 
-//     render(
-//       <MemoryRouter initialEntries={['/']}>
-//         <Routes>
-//           <Route path="/" element={<MainPage searchTermValue="" onDataLoaded={vi.fn()} />} />
-//         </Routes>
-//       </MemoryRouter>
-//     );
+  it('should render both sections when on details page', () => {
+    renderMainPage('/details/1');
+    expect(screen.getByText(/CardList - test/)).toBeInTheDocument();
+    expect(screen.getByText('Details Section')).toBeInTheDocument();
+  });
 
-//     expect(screen.getByText('CardList')).toBeInTheDocument();
-//     expect(screen.queryByText('Details')).not.toBeInTheDocument();
-//   });
+  it('should trigger onDataLoaded callback', async () => {
+    renderMainPage();
+    const loadButton = screen.getByText('Load Data');
+    loadButton.click();
+    expect(mockOnDataLoaded).toHaveBeenCalledWith(true);
+  });
 });

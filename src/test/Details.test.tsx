@@ -1,10 +1,21 @@
 import { describe, it, expect, vi, beforeEach, afterEach, Mock } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import Details from '../components/Details';
+import { useGetPersonDataQuery } from '../store/ApiSlice';
 
-// Mock the fetch API
-global.fetch = vi.fn();
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: vi.fn(),
+    useParams: vi.fn(),
+  };
+});
+
+vi.mock('../store/ApiSlice', () => ({
+  useGetPersonDataQuery: vi.fn(),
+}));
 
 describe('Details', () => {
   const mockData = {
@@ -14,26 +25,48 @@ describe('Details', () => {
     birth_year: '19BBY',
   };
 
+  const mockNavigate = vi.fn();
+
   beforeEach(() => {
     vi.clearAllMocks();
+    (useNavigate as Mock).mockReturnValue(mockNavigate);
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('fetches and displays data correctly', async () => {
-    (global.fetch as Mock).mockResolvedValueOnce({
-      json: () => Promise.resolve(mockData),
-    });
-
-    render(
-      <MemoryRouter initialEntries={['/details/1']}>
+  const renderComponent = (initialEntry = '/details/1') => {
+    return render(
+      <MemoryRouter initialEntries={[initialEntry]}>
         <Routes>
           <Route path="/details/:id" element={<Details />} />
         </Routes>
       </MemoryRouter>
     );
+  };
+
+  it('renders "Invalid ID" when id is undefined', () => {
+    // Mock useParams to return undefined id
+    (useParams as Mock).mockReturnValue({ id: undefined });
+
+    // Mock useGetPersonDataQuery to return undefined (since it should not be called)
+    (useGetPersonDataQuery as Mock).mockReturnValue({});
+
+    renderComponent('/details/undefined');
+
+    expect(screen.getByText('Invalid ID')).toBeInTheDocument();
+  });
+
+  it('renders person details when data is available', async () => {
+    (useParams as Mock).mockReturnValue({ id: '1' });
+
+    // Mock useGetPersonDataQuery to return valid data
+    (useGetPersonDataQuery as Mock).mockReturnValue({
+      data: mockData,
+    });
+
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText(`Name: ${mockData.name}`)).toBeInTheDocument();
@@ -44,52 +77,45 @@ describe('Details', () => {
   });
 
   it('renders the image with the correct URL', async () => {
-    (global.fetch as Mock).mockResolvedValueOnce({
-      json: () => Promise.resolve(mockData),
+    (useParams as Mock).mockReturnValue({ id: '1' });
+    (useGetPersonDataQuery as Mock).mockReturnValue({
+      data: mockData,
     });
 
-    render(
-      <MemoryRouter initialEntries={['/details/1']}>
-        <Routes>
-          <Route path="/details/:id" element={<Details />} />
-        </Routes>
-      </MemoryRouter>
-    );
+    renderComponent();
 
-    // Wait for the image to be rendered
     await waitFor(() => {
       const img = screen.getByRole('img') as HTMLImageElement;
-      expect(img.src).toBe('https://starwars-visualguide.com/assets/img/characters/1.jpg');
+      expect(img.src).toBe('https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/1.jpg');
     });
   });
 
-//     // Mock the fetch response
-//     (global.fetch as vi.Mock).mockResolvedValueOnce({
-//       json: () => Promise.resolve(mockData),
-//     });
+  it('navigates to the home page when the Close button is clicked', async () => {
+    (useParams as Mock).mockReturnValue({ id: '1' });
 
-//     const mockNavigate = vi.fn();
-//     vi.mock('react-router-dom', async () => {
-//       const actual = await vi.importActual('react-router-dom');
-//       return {
-//         ...actual,
-//         useNavigate: () => mockNavigate,
-//       };
-//     });
+    (useGetPersonDataQuery as Mock).mockReturnValue({
+      data: mockData,
+    });
 
-//     render(
-//       <MemoryRouter initialEntries={['/details/1']}>
-//         <Routes>
-//           <Route path="/details/:id" element={<Details />} />
-//         </Routes>
-//       </MemoryRouter>
-//     );
+    renderComponent();
 
-//     // Simulate clicking the Close button
-//     const button = screen.getByRole('button', { name: /close/i });
-//     fireEvent.click(button);
+    const closeButton = screen.getByRole('button', { name: /close/i });
+    fireEvent.click(closeButton);
 
-//     // Verify navigation to the home page
-//     expect(mockNavigate).toHaveBeenCalledWith('/');
-//   });
+    expect(mockNavigate).toHaveBeenCalledWith('/');
+  });
+
+  it('renders nothing when data is undefined', async () => {
+    (useParams as Mock).mockReturnValue({ id: '1' });
+
+    (useGetPersonDataQuery as Mock).mockReturnValue({
+      data: undefined,
+    });
+
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.queryByText(`Name: ${mockData.name}`)).not.toBeInTheDocument();
+    });
+  });
 });

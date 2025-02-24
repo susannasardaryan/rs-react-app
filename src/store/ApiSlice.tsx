@@ -7,6 +7,7 @@ interface Person {
 }
 
 interface PeopleResponse{
+    count: number
     results: Person[],
 }
 

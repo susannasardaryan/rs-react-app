@@ -2,15 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetPersonDataQuery } from "../store/ApiSlice";
 
 const Details = () => {
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams<{ id: string, }>();
     const navigate = useNavigate();
 
-    const { data } = useGetPersonDataQuery(id || "");
-
+    const { data } = useGetPersonDataQuery(id || "", { skip: !id });
     if (!id) {
         return <div>Invalid ID</div>;
     }
-    
+
     const imgUrl: string = `https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/${id}.jpg`;
     return (
         <>

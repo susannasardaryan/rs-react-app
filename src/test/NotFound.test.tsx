@@ -1,7 +1,15 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter, useNavigate } from 'react-router-dom';
 import NotFound from '../components/NotFound';
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: vi.fn(),
+  };
+});
 
 describe('NotFound', () => {
   it('displays the 404 message', () => {
@@ -15,25 +23,21 @@ describe('NotFound', () => {
     expect(screen.getByText('The page you are looking for does not exist.')).toBeInTheDocument();
   });
 
+  it('navigates back when the button is clicked', () => {
+    const mockNavigate = vi.fn();
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
 
-//     const mockNavigate = vi.fn();
-//     vi.mock('react-router-dom', async () => {
-//       const actual = await vi.importActual('react-router-dom');
-//       return {
-//         ...actual,
 
-//       };
-//     });
+    render(
+      <MemoryRouter>
+        <NotFound />
+      </MemoryRouter>
+    );
 
-//     render(
-//       <MemoryRouter>
-//         <NotFound />
-//       </MemoryRouter>
-//     );
 
-//     const button = screen.getByRole('button', { name: /close/i });
-//     fireEvent.click(button);
+    const closeButton = screen.getByRole('button', { name: /close/i });
+    fireEvent.click(closeButton);
 
-//     expect(mockNavigate).toHaveBeenCalledWith('/');
-//   });
+    expect(mockNavigate).toHaveBeenCalledWith('/');
+  });
 });
